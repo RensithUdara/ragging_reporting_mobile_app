@@ -1,15 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:io';
 import 'package:ragging_reporting_app/utils/validators.dart';
 import 'package:ragging_reporting_app/widgets/custom_button.dart';
-import 'package:ragging_reporting_app/widgets/custom_text_field.dart';
-import 'package:ragging_reporting_app/widgets/custom_dropdown.dart';
 import 'package:ragging_reporting_app/widgets/custom_date_picker.dart';
+import 'package:ragging_reporting_app/widgets/custom_dropdown.dart';
+import 'package:ragging_reporting_app/widgets/custom_text_field.dart';
 import 'package:ragging_reporting_app/widgets/custom_time_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _ReportScreenState extends State<ReportScreen> {
   final _descriptionController = TextEditingController();
   final supabase = Supabase.instance.client;
   final _imagePicker = ImagePicker();
-  
+
   DateTime? _incidentDate;
   TimeOfDay? _incidentTime;
   String? _selectedCategory;
@@ -33,7 +34,7 @@ class _ReportScreenState extends State<ReportScreen> {
   bool _isLoading = false;
   String? _errorMessage;
   double _uploadProgress = 0.0;
-  
+
   final List<String> _categories = [
     'Physical Harassment',
     'Verbal Harassment',
@@ -56,7 +57,7 @@ class _ReportScreenState extends State<ReportScreen> {
       maxWidth: 1800,
       maxHeight: 1800,
     );
-    
+
     if (image != null) {
       setState(() {
         _evidenceFile = File(image.path);
@@ -66,66 +67,65 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future<void> _submitReport() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_incidentDate == null) {
       setState(() {
         _errorMessage = 'Please select an incident date';
       });
       return;
     }
-    
+
     if (_incidentTime == null) {
       setState(() {
         _errorMessage = 'Please select an incident time';
       });
       return;
     }
-    
+
     if (_selectedCategory == null) {
       setState(() {
         _errorMessage = 'Please select a category';
       });
       return;
     }
-    
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
-    
+
     try {
       final userId = supabase.auth.currentUser!.id;
       final complaintId = const Uuid().v4();
-      final complaintNumber = 'RRS-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
-      
+      final complaintNumber =
+          'RRS-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+
       // Format date and time
       final formattedDate = DateFormat('yyyy-MM-dd').format(_incidentDate!);
-      final formattedTime = '${_incidentTime!.hour.toString().padLeft(2, '0')}:${_incidentTime!.minute.toString().padLeft(2, '0')}:00';
-      
+      final formattedTime =
+          '${_incidentTime!.hour.toString().padLeft(2, '0')}:${_incidentTime!.minute.toString().padLeft(2, '0')}:00';
+
       String? evidenceFileName;
       String? evidenceFilePath;
       String? evidenceFileType;
-      
+
       // Upload evidence file if selected
       if (_evidenceFile != null) {
         final fileExtension = _evidenceFile!.path.split('.').last;
-        final fileName = 'evidence_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
+        final fileName =
+            'evidence_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
         evidenceFileName = fileName;
         evidenceFilePath = 'evidence/$userId/$fileName';
         evidenceFileType = _getFileType(fileExtension);
-        
+
         // Upload file to Supabase Storage
         await supabase.storage.from('evidence').upload(
-          evidenceFilePath,
-          _evidenceFile!,
-          onProgress: (bytesUploaded, totalBytes) {
-            setState(() {
-              _uploadProgress = bytesUploaded / totalBytes;
-            });
-          },
-        );
+              evidenceFilePath,
+              _evidenceFile!,
+              // Remove onProgress as it is not supported
+            );
       }
-      
+
       // Insert complaint data
       await supabase.from('complaints').insert({
         'id': complaintId,
@@ -143,9 +143,9 @@ class _ReportScreenState extends State<ReportScreen> {
         'evidence_file_name': evidenceFileName,
         'evidence_file_type': evidenceFileType,
       });
-      
+
       if (!mounted) return;
-      
+
       // Show success dialog
       showDialog(
         context: context,
@@ -258,7 +258,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              
+
               // Error message
               if (_errorMessage != null) ...[
                 Container(
@@ -276,7 +276,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              
+
               // Incident date
               CustomDatePicker(
                 label: 'Incident Date',
@@ -288,7 +288,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Incident time
               CustomTimePicker(
                 label: 'Incident Time',
@@ -300,7 +300,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Location
               CustomTextField(
                 controller: _locationController,
@@ -310,7 +310,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 validator: Validators.validateRequired,
               ),
               const SizedBox(height: 16),
-              
+
               // Category
               CustomDropdown(
                 label: 'Category',
@@ -324,7 +324,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Description
               CustomTextField(
                 controller: _descriptionController,
@@ -335,7 +335,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 validator: Validators.validateRequired,
               ),
               const SizedBox(height: 16),
-              
+
               // Evidence file
               Card(
                 child: Padding(
@@ -359,7 +359,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // File preview
                       if (_evidenceFile != null) ...[
                         Container(
@@ -369,31 +369,34 @@ class _ReportScreenState extends State<ReportScreen> {
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: _getFileType(_evidenceFile!.path.split('.').last)?.startsWith('image/')
-                              ? Image.file(
-                                  _evidenceFile!,
-                                  fit: BoxFit.cover,
-                                )
-                              : Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.insert_drive_file,
-                                        size: 48,
-                                        color: Colors.grey,
+                          child:
+                              _getFileType(_evidenceFile!.path.split('.').last)!
+                                      .startsWith('image/')
+                                  ? Image.file(
+                                      _evidenceFile!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.insert_drive_file,
+                                            size: 48,
+                                            color: Colors.grey,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            _evidenceFile!.path.split('/').last,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        _evidenceFile!.path.split('/').last,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
                         ),
                         const SizedBox(height: 8),
                         TextButton.icon(
@@ -402,7 +405,8 @@ class _ReportScreenState extends State<ReportScreen> {
                               _evidenceFile = null;
                             });
                           },
-                          icon: const Icon(Icons.delete_outline, color: Colors.red),
+                          icon: const Icon(Icons.delete_outline,
+                              color: Colors.red),
                           label: const Text(
                             'Remove File',
                             style: TextStyle(color: Colors.red),
@@ -417,13 +421,13 @@ class _ReportScreenState extends State<ReportScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.grey.shade300,
-                                style: BorderStyle.dashed,
+                                style: BorderStyle.solid,
                               ),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Column(
+                            child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Icon(
                                   Icons.cloud_upload_outlined,
                                   size: 40,
@@ -441,9 +445,11 @@ class _ReportScreenState extends State<ReportScreen> {
                           ),
                         ),
                       ],
-                      
+
                       // Upload progress
-                      if (_isLoading && _evidenceFile != null && _uploadProgress > 0) ...[
+                      if (_isLoading &&
+                          _evidenceFile != null &&
+                          _uploadProgress > 0) ...[
                         const SizedBox(height: 16),
                         LinearProgressIndicator(value: _uploadProgress),
                         const SizedBox(height: 8),
@@ -457,7 +463,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Anonymous checkbox
               CheckboxListTile(
                 title: const Text('Submit Anonymously'),
@@ -475,7 +481,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 contentPadding: EdgeInsets.zero,
               ),
               const SizedBox(height: 24),
-              
+
               // Submit button
               CustomButton(
                 text: 'Submit Report',
