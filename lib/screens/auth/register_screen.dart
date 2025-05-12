@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ragging_reporting_app/screens/auth/verification_screen.dart';
+// import 'package:ragging_reporting_app/screens/auth/verification_screen.dart';
 import 'package:ragging_reporting_app/utils/validators.dart';
 import 'package:ragging_reporting_app/widgets/custom_button.dart';
 import 'package:ragging_reporting_app/widgets/custom_text_field.dart';
@@ -60,13 +60,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (!mounted) return;
         
         // Navigate to verification screen
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => VerificationScreen(
-              email: _emailController.text.trim(),
-            ),
-          ),
-        );
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(
+        //     builder: (_) => VerificationScreen(
+        //       email: _emailController.text.trim(),
+        //     ),
+        //   ),
+        // );
       }
     } on AuthException catch (e) {
       setState(() {
