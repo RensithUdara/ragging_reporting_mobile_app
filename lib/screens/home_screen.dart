@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ragging_reporting_app/screens/report_screen.dart';
 import 'package:ragging_reporting_app/screens/check_status_screen.dart';
-import 'package:ragging_reporting_app/screens/dashboard_screen.dart';
-import 'package:ragging_reporting_app/screens/profile_screen.dart';
-import 'package:ragging_reporting_app/screens/about_screen.dart';
+// import 'package:ragging_reporting_app/screens/dashboard_screen.dart';
+// import 'package:ragging_reporting_app/screens/profile_screen.dart';
+// import 'package:ragging_reporting_app/screens/about_screen.dart';
 import 'package:ragging_reporting_app/screens/auth/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -166,12 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.dashboard,
                         color: Colors.green,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const DashboardScreen(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => const DashboardScreen(),
+                          //   ),
+                          // );
                         },
                       ),
                       
@@ -182,12 +182,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.person,
                         color: Colors.purple,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ProfileScreen(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => const ProfileScreen(),
+                          //   ),
+                          // );
                         },
                       ),
                     ],
@@ -213,12 +213,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       subtitle: const Text('Learn about ragging and its consequences'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const AboutScreen(),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (_) => const AboutScreen(),
+                        //   ),
+                        // );
                       },
                     ),
                   ),
