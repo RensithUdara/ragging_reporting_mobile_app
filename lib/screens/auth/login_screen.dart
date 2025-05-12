@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ragging_reporting_app/screens/home_screen.dart';
 import 'package:ragging_reporting_app/screens/auth/register_screen.dart';
-import 'package:ragging_reporting_app/screens/auth/forgot_password_screen.dart';
+// import 'package:ragging_reporting_app/screens/auth/forgot_password_screen.dart';
 import 'package:ragging_reporting_app/utils/validators.dart';
 import 'package:ragging_reporting_app/widgets/custom_button.dart';
 import 'package:ragging_reporting_app/widgets/custom_text_field.dart';
@@ -148,20 +148,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 8),
                   
                   // Forgot password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ForgotPasswordScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text('Forgot Password?'),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: TextButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (_) => const ForgotPasswordScreen(),
+                  //         ),
+                  //       );
+                  //     },
+                  //     child: const Text('Forgot Password?'),
+                  //   ),
+                  // ),
                   const SizedBox(height: 24),
                   
                   // Login button
