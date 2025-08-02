@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ragging_reporting_app/screens/home_screen.dart';
 import 'package:ragging_reporting_app/screens/auth/register_screen.dart';
+import 'package:ragging_reporting_app/screens/home_screen.dart';
 // import 'package:ragging_reporting_app/screens/auth/forgot_password_screen.dart';
 import 'package:ragging_reporting_app/utils/validators.dart';
 import 'package:ragging_reporting_app/widgets/custom_button.dart';
 import 'package:ragging_reporting_app/widgets/custom_text_field.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final supabase = Supabase.instance.client;
-  
+
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -32,18 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
-    
+
     try {
       final response = await supabase.auth.signInWithPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (response.user != null) {
         if (!mounted) return;
         Navigator.of(context).pushReplacement(
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 100,
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Title
                   const Text(
                     'Welcome Back',
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Error message
                   if (_errorMessage != null) ...[
                     Container(
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  
+
                   // Email field
                   CustomTextField(
                     controller: _emailController,
@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: Validators.validateEmail,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Password field
                   CustomTextField(
                     controller: _passwordController,
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: Validators.validatePassword,
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Forgot password
                   // Align(
                   //   alignment: Alignment.centerRight,
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //   ),
                   // ),
                   const SizedBox(height: 24),
-                  
+
                   // Login button
                   CustomButton(
                     text: 'Login',
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _login,
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Register link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
