@@ -152,7 +152,7 @@ class NotificationService {
 
     return _supabase
         .from('notifications')
-        .stream(primaryKey: ['id'])
+        .stream(primaryKey: const ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
         .map((data) => data
