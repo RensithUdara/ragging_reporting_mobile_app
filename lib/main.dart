@@ -3,13 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'constants/app_constants.dart';
+import 'constants/app_routes.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/complaint_controller.dart';
 import 'controllers/notification_controller.dart';
 import 'theme/app_theme.dart';
 import 'views/splash_screen.dart';
-import 'constants/app_constants.dart';
-import 'constants/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +57,9 @@ class MyApp extends StatelessWidget {
                 builder: (context) {
                   return MediaQuery(
                     data: MediaQuery.of(context).copyWith(
-                      textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.2),
+                      textScaler: TextScaler.linear(MediaQuery.of(context)
+                          .textScaleFactor
+                          .clamp(0.8, 1.2)),
                     ),
                     child: child!,
                   );
