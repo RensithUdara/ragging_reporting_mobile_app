@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/complaint_controller.dart';
 import '../../models/complaint_model.dart';
 import '../../theme/app_theme.dart';
@@ -18,7 +19,7 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _witnessesController = TextEditingController();
-  
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   ComplaintCategory _selectedCategory = ComplaintCategory.other;
@@ -85,29 +86,31 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Incident Details
               _buildSectionHeader('Incident Details'),
               const SizedBox(height: 16),
-              
+
               // Category Selection
               _buildDropdownField<ComplaintCategory>(
                 label: 'Category *',
                 value: _selectedCategory,
                 items: ComplaintCategory.values,
-                itemBuilder: (category) => ComplaintModel.categoryToString(category),
-                onChanged: (value) => setState(() => _selectedCategory = value!),
+                itemBuilder: (category) =>
+                    ComplaintModel.categoryToString(category),
+                onChanged: (value) =>
+                    setState(() => _selectedCategory = value!),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Date Selection
               _buildDateTimeFields(),
-              
+
               const SizedBox(height: 16),
-              
+
               // Location
               CustomTextField(
                 controller: _locationController,
@@ -121,13 +124,13 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Description
               _buildSectionHeader('Incident Description'),
               const SizedBox(height: 16),
-              
+
               CustomTextField(
                 controller: _descriptionController,
                 label: 'Description *',
@@ -143,24 +146,26 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Additional Information
               _buildSectionHeader('Additional Information'),
               const SizedBox(height: 16),
-              
+
               // Priority
               _buildDropdownField<Priority>(
                 label: 'Priority',
                 value: _selectedPriority,
                 items: Priority.values,
-                itemBuilder: (priority) => ComplaintModel.priorityToString(priority),
-                onChanged: (value) => setState(() => _selectedPriority = value!),
+                itemBuilder: (priority) =>
+                    ComplaintModel.priorityToString(priority),
+                onChanged: (value) =>
+                    setState(() => _selectedPriority = value!),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Witnesses
               CustomTextField(
                 controller: _witnessesController,
@@ -169,32 +174,33 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                 prefixIcon: Icons.people_outlined,
                 maxLines: 2,
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Anonymous Reporting
               _buildAnonymousToggle(),
-              
+
               const SizedBox(height: 32),
-              
+
               // Evidence Upload Section
               _buildEvidenceSection(),
-              
+
               const SizedBox(height: 40),
-              
+
               // Submit Button
               Consumer<ComplaintController>(
                 builder: (context, complaintController, child) {
                   return CustomButton(
                     text: 'Submit Report',
-                    onPressed: complaintController.isLoading ? null : _submitReport,
+                    onPressed:
+                        complaintController.isLoading ? null : _submitReport,
                     isLoading: complaintController.isLoading,
                   );
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Disclaimer
               Container(
                 padding: const EdgeInsets.all(16),
@@ -206,7 +212,8 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.info_outline, color: Colors.amber, size: 20),
+                    const Icon(Icons.info_outline,
+                        color: Colors.amber, size: 20),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -262,7 +269,8 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           items: items.map((item) {
             return DropdownMenuItem<T>(
@@ -441,7 +449,6 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
           const SizedBox(height: 16),
           OutlinedButton.icon(
             onPressed: () {
-              // TODO: Implement file picker
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('File upload - Coming Soon')),
               );
@@ -491,7 +498,8 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
         return;
       }
 
-      final complaintController = Provider.of<ComplaintController>(context, listen: false);
+      final complaintController =
+          Provider.of<ComplaintController>(context, listen: false);
 
       try {
         final witnesses = _witnessesController.text.isNotEmpty
