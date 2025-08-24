@@ -18,21 +18,25 @@ class NotificationService {
       var query = _supabase
           .from('notifications')
           .select()
-          .filter('user_id', 'eq', userId)
+          .eq('user_id', userId)
           .order('created_at', ascending: false);
 
-      if (unreadOnly) {
-        query = query.filter('is_read', 'eq', false);
-      }
-
+      // For now, we'll handle unread filtering on the client side
       final from = (page - 1) * limit;
       final to = from + limit - 1;
 
       final response = await query.range(from, to);
 
-      return (response as List)
+      var notifications = (response as List)
           .map((item) => NotificationModel.fromJson(item))
           .toList();
+
+      // Filter unread on client side if needed
+      if (unreadOnly) {
+        notifications = notifications.where((n) => !n.isRead).toList();
+      }
+
+      return notifications;
     } catch (e) {
       throw Exception('Failed to get notifications: ${e.toString()}');
     }
