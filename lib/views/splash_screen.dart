@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 import '../controllers/auth_controller.dart';
 import '../constants/app_constants.dart';
-import 'auth/login_screen.dart';
 import 'dashboard/home_screen.dart';
+import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -139,9 +139,9 @@ class _SplashScreenState extends State<SplashScreen> {
               const SizedBox(height: 100),
               
               // Version info
-              Text(
+              const Text(
                 'Version ${AppConstants.appVersion}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white54,
                   fontSize: 12,
                 ),

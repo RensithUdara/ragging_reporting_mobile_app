@@ -4,7 +4,6 @@ import '../../controllers/auth_controller.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
-import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -254,11 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
-                                  ),
-                                );
+                                Navigator.of(context).pop();
                               },
                               child: const Text(
                                 'Sign In',
@@ -290,8 +285,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await authController.register(
           email: _emailController.text.trim(),
           password: _passwordController.text,
-          firstName: _firstNameController.text.trim(),
-          lastName: _lastNameController.text.trim(),
+          fullName: '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}',
           studentId: _studentIdController.text.trim(),
           phoneNumber: _phoneController.text.trim(),
         );
