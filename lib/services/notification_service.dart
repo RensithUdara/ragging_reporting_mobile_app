@@ -18,11 +18,11 @@ class NotificationService {
       var query = _supabase
           .from('notifications')
           .select()
-          .eq('user_id', userId)
+          .filter('user_id', 'eq', userId)
           .order('created_at', ascending: false);
 
       if (unreadOnly) {
-        query = query.eq('is_read', false);
+        query = query.filter('is_read', 'eq', false);
       }
 
       final from = (page - 1) * limit;
