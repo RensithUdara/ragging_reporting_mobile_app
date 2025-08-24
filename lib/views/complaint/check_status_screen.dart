@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../controllers/complaint_controller.dart';
 import '../../models/complaint_model.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/custom_card.dart';
 
 class CheckStatusScreen extends StatefulWidget {
   const CheckStatusScreen({super.key});
@@ -26,7 +25,7 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ComplaintController>(context, listen: false).fetchComplaints();
+      Provider.of<ComplaintController>(context, listen: false).loadUserComplaints();
     });
   }
 
@@ -78,7 +77,7 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
                         Text('Error: ${controller.errorMessage}'),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: () => controller.fetchComplaints(),
+                          onPressed: () => controller.loadUserComplaints(),
                           child: const Text('Retry'),
                         ),
                       ],
@@ -117,7 +116,7 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
                   itemCount: complaints.length,
                   itemBuilder: (context, index) {
                     final complaint = complaints[index];
-                    return CustomCard(
+                    return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         title: Text(
@@ -142,7 +141,7 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Submitted: ${_formatDate(complaint.createdAt)}',
+                              'Submitted: ${_formatDate(complaint.submissionDate)}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -172,7 +171,7 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
       case ComplaintStatus.pending:
         color = Colors.orange;
         break;
-      case ComplaintStatus.investigating:
+      case ComplaintStatus.inProgress:
         color = Colors.blue;
         break;
       case ComplaintStatus.resolved:
@@ -180,6 +179,9 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
         break;
       case ComplaintStatus.rejected:
         color = Colors.red;
+        break;
+      case ComplaintStatus.closed:
+        color = Colors.grey;
         break;
     }
 
@@ -211,6 +213,9 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
         break;
       case Priority.high:
         color = Colors.red;
+        break;
+      case Priority.critical:
+        color = Colors.deepOrange;
         break;
     }
 
@@ -252,9 +257,9 @@ class _CheckStatusScreenState extends State<CheckStatusScreen> {
             const SizedBox(height: 8),
             Text('Description: ${complaint.description}'),
             const SizedBox(height: 8),
-            Text('Submitted: ${_formatDate(complaint.createdAt)}'),
-            if (complaint.updatedAt != null)
-              Text('Last Updated: ${_formatDate(complaint.updatedAt!)}'),
+            Text('Submitted: ${_formatDate(complaint.submissionDate)}'),
+            if (complaint.resolvedAt != null)
+              Text('Resolved: ${_formatDate(complaint.resolvedAt!)}'),
           ],
         ),
         actions: [
