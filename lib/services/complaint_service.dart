@@ -141,15 +141,15 @@ class ComplaintService {
 
       // Apply filters
       if (status != null) {
-        queryBuilder = queryBuilder.eq('status', ComplaintModel.statusToString(status));
+        queryBuilder = queryBuilder.filter('status', 'eq', ComplaintModel.statusToString(status));
       }
 
       if (category != null) {
-        queryBuilder = queryBuilder.eq('category', ComplaintModel.categoryToString(category));
+        queryBuilder = queryBuilder.filter('category', 'eq', ComplaintModel.categoryToString(category));
       }
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
-        queryBuilder = queryBuilder.or('description.ilike.%$searchQuery%,incident_location.ilike.%$searchQuery%');
+        queryBuilder = queryBuilder.filter('description', 'ilike', '%$searchQuery%');
       }
 
       final from = (page - 1) * limit;
