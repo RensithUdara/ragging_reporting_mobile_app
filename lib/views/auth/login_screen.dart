@@ -3,8 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/validators.dart';
-import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/custom_button.dart';
+import '../../theme/app_theme.dart';
+import 'register_screen.dart';
+import 'forgot_password_screen.dart';
+          controller: _passwordController,
+          label: 'Password',
+          hint: 'Enter your password',
+          isPassword: true,
+          prefixIcon: Icons.lock_outline,
+          validator: Validators.validatePassword,
+        ),ort '../../widgets/custom_text_field.dart';
 import '../../constants/app_constants.dart';
 import '../dashboard/home_screen.dart';
 import 'register_screen.dart';
