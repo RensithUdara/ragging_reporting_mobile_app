@@ -14,6 +14,7 @@ class AuthController extends ChangeNotifier {
 
   // Getters
   UserModel? get currentUser => _currentUser;
+  UserModel? get user => _currentUser; // Alias for compatibility
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _isAuthenticated;
@@ -99,6 +100,25 @@ class AuthController extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  // Register (alias for signUp for compatibility)
+  Future<bool> register({
+    required String email,
+    required String password,
+    required String fullName,
+    String? phoneNumber,
+    String? institution,
+    String? studentId,
+  }) async {
+    return await signUp(
+      email: email,
+      password: password,
+      fullName: fullName,
+      phoneNumber: phoneNumber,
+      institution: institution,
+      studentId: studentId,
+    );
   }
 
   // Sign out
