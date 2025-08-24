@@ -227,47 +227,50 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  IconData _getNotificationIcon(NotificationType type) {
+  IconData _getNotificationIcon(String type) {
     switch (type) {
-      case NotificationType.complaintUpdate:
+      case 'complaint_update':
         return Icons.update;
-      case NotificationType.complaintResolved:
+      case 'complaint_resolved':
         return Icons.check_circle;
-      case NotificationType.complaintRejected:
+      case 'complaint_rejected':
         return Icons.cancel;
-      case NotificationType.systemAlert:
+      case 'system_alert':
         return Icons.warning;
-      case NotificationType.general:
+      case 'general':
+      default:
         return Icons.info;
     }
   }
 
-  Color _getNotificationColor(NotificationType type) {
+  Color _getNotificationColor(String type) {
     switch (type) {
-      case NotificationType.complaintUpdate:
+      case 'complaint_update':
         return Colors.blue;
-      case NotificationType.complaintResolved:
+      case 'complaint_resolved':
         return Colors.green;
-      case NotificationType.complaintRejected:
+      case 'complaint_rejected':
         return Colors.red;
-      case NotificationType.systemAlert:
+      case 'system_alert':
         return Colors.orange;
-      case NotificationType.general:
+      case 'general':
+      default:
         return Colors.grey;
     }
   }
 
-  String _getNotificationTypeText(NotificationType type) {
+  String _getNotificationTypeText(String type) {
     switch (type) {
-      case NotificationType.complaintUpdate:
+      case 'complaint_update':
         return 'Update';
-      case NotificationType.complaintResolved:
+      case 'complaint_resolved':
         return 'Resolved';
-      case NotificationType.complaintRejected:
+      case 'complaint_rejected':
         return 'Rejected';
-      case NotificationType.systemAlert:
+      case 'system_alert':
         return 'Alert';
-      case NotificationType.general:
+      case 'general':
+      default:
         return 'General';
     }
   }

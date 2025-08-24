@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/notification_model.dart';
+
 import '../constants/app_constants.dart';
+import '../models/notification_model.dart';
 
 class NotificationService {
   final SupabaseClient _supabase = Supabase.instance.client;
@@ -45,13 +46,10 @@ class NotificationService {
   // Mark notification as read
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _supabase
-          .from('notifications')
-          .update({
-            'is_read': true,
-            'read_at': DateTime.now().toIso8601String(),
-          })
-          .eq('id', notificationId);
+      await _supabase.from('notifications').update({
+        'is_read': true,
+        'read_at': DateTime.now().toIso8601String(),
+      }).eq('id', notificationId);
     } catch (e) {
       throw Exception('Failed to mark notification as read: ${e.toString()}');
     }
@@ -72,7 +70,8 @@ class NotificationService {
           .eq('user_id', userId)
           .eq('is_read', false);
     } catch (e) {
-      throw Exception('Failed to mark all notifications as read: ${e.toString()}');
+      throw Exception(
+          'Failed to mark all notifications as read: ${e.toString()}');
     }
   }
 
@@ -123,10 +122,7 @@ class NotificationService {
   // Delete notification
   Future<void> deleteNotification(String notificationId) async {
     try {
-      await _supabase
-          .from('notifications')
-          .delete()
-          .eq('id', notificationId);
+      await _supabase.from('notifications').delete().eq('id', notificationId);
     } catch (e) {
       throw Exception('Failed to delete notification: ${e.toString()}');
     }
@@ -138,10 +134,7 @@ class NotificationService {
       final userId = _supabase.auth.currentUser?.id;
       if (userId == null) throw Exception('User not authenticated');
 
-      await _supabase
-          .from('notifications')
-          .delete()
-          .eq('user_id', userId);
+      await _supabase.from('notifications').delete().eq('user_id', userId);
     } catch (e) {
       throw Exception('Failed to delete all notifications: ${e.toString()}');
     }
@@ -151,7 +144,7 @@ class NotificationService {
   Stream<List<NotificationModel>> getNotificationStream() {
     final userId = _supabase.auth.currentUser?.id;
     if (userId == null) {
-      return Stream.empty();
+      return const Stream.empty();
     }
 
     return _supabase
@@ -159,9 +152,8 @@ class NotificationService {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .map((data) => data
-            .map((item) => NotificationModel.fromJson(item))
-            .toList());
+        .map((data) =>
+            data.map((item) => NotificationModel.fromJson(item)).toList());
   }
 
   // Helper methods
@@ -178,7 +170,8 @@ class NotificationService {
     await createNotification(
       userId: userId,
       title: 'Complaint Update',
-      message: 'Your complaint $complaintNumber status has been updated to $newStatus.',
+      message:
+          'Your complaint $complaintNumber status has been updated to $newStatus.',
       type: 'complaint_update',
       data: {
         'complaint_number': complaintNumber,
