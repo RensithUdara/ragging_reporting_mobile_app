@@ -8,13 +8,230 @@ import '../../widgets/custom_button.dart';
 import '../../theme/app_theme.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
-          controller: _passwordController,
-          label: 'Password',
-          hint: 'Enter your password',
-          isPassword: true,
-          prefixIcon: Icons.lock_outline,
-          validator: Validators.validatePassword,
-        ),ort '../../widgets/custom_text_field.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _rememberMe = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.primaryColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 60),
+                  
+                  // Logo and Title
+                  const Icon(
+                    Icons.shield_rounded,
+                    size: 100,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  const Text(
+                    'Welcome Back',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  
+                  const Text(
+                    'Sign in to continue reporting',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 50),
+                  
+                  // Login Form Card
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          hint: 'Enter your email address',
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icons.email_outlined,
+                          validator: Validators.validateEmail,
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        CustomTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: 'Enter your password',
+                          isPassword: true,
+                          prefixIcon: Icons.lock_outline,
+                          validator: Validators.validatePassword,
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        // Remember Me and Forgot Password
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: _rememberMe,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _rememberMe = value ?? false;
+                                    });
+                                  },
+                                  activeColor: AppTheme.primaryColor,
+                                ),
+                                const Text(
+                                  'Remember me',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const ForgotPasswordScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: AppTheme.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        
+                        const SizedBox(height: 32),
+                        
+                        // Login Button
+                        Consumer<AuthController>(
+                          builder: (context, authController, child) {
+                            return CustomButton(
+                              text: 'Sign In',
+                              onPressed: authController.isLoading ? null : _handleLogin,
+                              isLoading: authController.isLoading,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Sign Up Link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Don\'t have an account? ',
+                        style: TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final authController = Provider.of<AuthController>(context, listen: false);
+      
+      try {
+        await authController.signIn(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
+        
+        // Navigation will be handled automatically by the auth state change
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Login failed: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+}ort '../../widgets/custom_text_field.dart';
 import '../../constants/app_constants.dart';
 import '../dashboard/home_screen.dart';
 import 'register_screen.dart';
