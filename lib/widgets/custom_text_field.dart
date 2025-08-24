@@ -3,27 +3,31 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
-  final String hint;
+  final String? hint;
   final bool isPassword;
   final IconData? prefixIcon;
+  final Widget? suffixIcon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final int maxLines;
   final bool readOnly;
   final VoidCallback? onTap;
+  final bool obscureText;
 
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.label,
-    required this.hint,
+    this.hint,
     this.isPassword = false,
     this.prefixIcon,
+    this.suffixIcon,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.maxLines = 1,
     this.readOnly = false,
     this.onTap,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
