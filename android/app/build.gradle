@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.ragging_reporting_mobile_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
