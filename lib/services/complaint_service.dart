@@ -135,28 +135,29 @@ class ComplaintService {
     String? searchQuery,
   }) async {
     try {
-      var query = _supabase
+      var queryBuilder = _supabase
           .from('complaints')
-          .select()
-          .order('submission_date', ascending: false);
+          .select();
 
       // Apply filters
       if (status != null) {
-        query = query.eq('status', ComplaintModel._statusToString(status));
+        queryBuilder = queryBuilder.eq('status', ComplaintModel.statusToString(status));
       }
 
       if (category != null) {
-        query = query.eq('category', ComplaintModel._categoryToString(category));
+        queryBuilder = queryBuilder.eq('category', ComplaintModel.categoryToString(category));
       }
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
-        query = query.or('description.ilike.%$searchQuery%,incident_location.ilike.%$searchQuery%');
+        queryBuilder = queryBuilder.or('description.ilike.%$searchQuery%,incident_location.ilike.%$searchQuery%');
       }
 
       final from = (page - 1) * limit;
       final to = from + limit - 1;
 
-      final response = await query.range(from, to);
+      final response = await queryBuilder
+          .order('submission_date', ascending: false)
+          .range(from, to);
 
       return (response as List)
           .map((item) => ComplaintModel.fromJson(item))
@@ -176,7 +177,7 @@ class ComplaintService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'status': ComplaintModel._statusToString(status),
+        'status': ComplaintModel.statusToString(status),
         'updated_at': DateTime.now().toIso8601String(),
       };
 
