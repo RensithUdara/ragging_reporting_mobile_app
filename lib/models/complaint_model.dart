@@ -180,7 +180,7 @@ class ComplaintModel {
     }
   }
 
-  static String _categoryToString(ComplaintCategory category) {
+  static String categoryToString(ComplaintCategory category) {
     switch (category) {
       case ComplaintCategory.physicalHarassment:
         return 'Physical Harassment';
@@ -201,7 +201,7 @@ class ComplaintModel {
     }
   }
 
-  static String _statusToString(ComplaintStatus status) {
+  static String statusToString(ComplaintStatus status) {
     switch (status) {
       case ComplaintStatus.pending:
         return 'Pending';
@@ -216,7 +216,7 @@ class ComplaintModel {
     }
   }
 
-  static String _priorityToString(Priority priority) {
+  static String priorityToString(Priority priority) {
     switch (priority) {
       case Priority.low:
         return 'Low';
