@@ -108,11 +108,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
+                        Navigator.of(context).pop();
                       },
                       child: const Text(
                         'Sign In',
@@ -210,11 +206,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         CustomButton(
           text: 'Back to Login',
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
         ),
       ],
