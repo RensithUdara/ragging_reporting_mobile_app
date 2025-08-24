@@ -139,19 +139,6 @@ class ComplaintService {
           .from('complaints')
           .select();
 
-      // Apply filters
-      if (status != null) {
-        queryBuilder = queryBuilder.filter('status', 'eq', ComplaintModel.statusToString(status));
-      }
-
-      if (category != null) {
-        queryBuilder = queryBuilder.filter('category', 'eq', ComplaintModel.categoryToString(category));
-      }
-
-      if (searchQuery != null && searchQuery.isNotEmpty) {
-        queryBuilder = queryBuilder.filter('description', 'ilike', '%$searchQuery%');
-      }
-
       final from = (page - 1) * limit;
       final to = from + limit - 1;
 
@@ -159,9 +146,27 @@ class ComplaintService {
           .order('submission_date', ascending: false)
           .range(from, to);
 
-      return (response as List)
+      var complaints = (response as List)
           .map((item) => ComplaintModel.fromJson(item))
           .toList();
+
+      // Apply filters on client side for now
+      if (status != null) {
+        complaints = complaints.where((c) => c.status == status).toList();
+      }
+
+      if (category != null) {
+        complaints = complaints.where((c) => c.category == category).toList();
+      }
+
+      if (searchQuery != null && searchQuery.isNotEmpty) {
+        complaints = complaints.where((c) => 
+          c.description.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          c.incidentLocation.toLowerCase().contains(searchQuery.toLowerCase())
+        ).toList();
+      }
+
+      return complaints;
     } catch (e) {
       throw Exception('Failed to get complaints: ${e.toString()}');
     }
